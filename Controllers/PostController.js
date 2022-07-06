@@ -49,17 +49,15 @@ export const updatePost=async (req,res)=>{
 
 export const deletePost =async (req,res)=>{
     const id=req.params.id;
-    const {userId} =req.body;
-
-
+    console.log(req.body);
     try {
         const post =await PostModel.findById(id)
-        if(post.userId===userId)
+        if(post)
         {
            await post.deleteOne()
             res.status(200).json("Post deleted successfully")
         }else{
-            res.status(403).json("Action forbidden")
+            res.status(404).json("Post not found")
         }
     } catch (error) {
         res.status(500).json(error)
@@ -71,28 +69,37 @@ export const deletePost =async (req,res)=>{
 export const likePost=async (req,res)=>{
     const id=req.params.id;
     const {userId}=req.body;
-
+ 
     try {
         const post =await PostModel.findById(id)
         if(!post.likes.includes(userId))
         {
             await post.updateOne({$push:{likes:userId}})
             res.status(200).json("POst liked")
-
+           
         }else{
             await post.updateOne({$pull:{likes:userId}})
             res.status(200).json("Post unliked")
+           
         }
     } catch (error) {
         res.status(500).json(error)
     }
 }
-
+//get all posts
+export const allPosts= async (req,res)=>{
+    try {
+        const data=await PostModel.find()
+        res.status(200).json(data.reverse())
+    } catch (error) {
+       res.status(200).json(error) 
+    }
+}
 
 //get time line post
 export const getTimelinePosts =async (req,res)=>{
       const userId =req.params.id;
-
+      console.log("fetchinggg   1");
       try {
          const currentUserPosts=await PostModel.find({userId:userId})
          const followingPosts=await UserModel.aggregate([
@@ -114,10 +121,35 @@ export const getTimelinePosts =async (req,res)=>{
             }
          ])
 
+         
          res.status(200).json(currentUserPosts.concat(...followingPosts[0].followingPosts).sort((a,b)=>{
             return b.createdAt-a.createdAt
          }))
+         console.log(followingPosts);
       } catch (error) {
         res.status(500).json(error)
       }
+}
+
+export const addComment=async(req,res)=>{
+    const postId=req.body.postId
+    const userData=await UserModel.findById(req.body.postedBy)
+    console.log(userData);
+    const comment ={
+        postId:postId,
+        text:req.body.commentText,
+        postedBy:req.body.postedBy,
+        commentedUserData:userData
+    }
+    console.log(comment);
+    try {
+       const comments= await PostModel.findByIdAndUpdate(postId,{
+        $push:{comments:comment}
+       })
+       console.log(comments);
+       const data=comments.comments
+       res.status(200).json(data.reverse() )
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }

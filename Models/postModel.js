@@ -9,6 +9,7 @@ const postSchema=mongoose.Schema({
         type:String,
         
     },
+    comments:[],
     likes:[],
     image:String
 },

@@ -41,7 +41,11 @@ export const loginUser= async(req,res)=>{
 
        if(!validity){
           res.status(400).json("Wrong password")
-       }else{
+       }else if(user.auth===false){
+         console.log(user.auth)
+         res.status(401).json("Action forbidden")
+       }
+       else{
         const token=jwt.sign({
             username:user.username, id:user._id
          },process.env.JWT_KEY,{expiresIn:'1h'})

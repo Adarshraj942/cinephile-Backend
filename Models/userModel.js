@@ -23,6 +23,10 @@ const UserSchema=mongoose.Schema(
             default:false
 
         },
+        auth:{
+            type:Boolean,
+            default:true
+        },
         profilePicture:String,
         coverPicture:String,
         about:String,

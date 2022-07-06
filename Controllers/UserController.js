@@ -138,3 +138,26 @@ export const unFollowUser=async (req,res)=>{
     }
 }
 
+export const blockUser=async(req,res)=>{
+    const userId=req.params.id
+    try {
+        const user=await UserModel.findByIdAndUpdate({_id:userId},{
+            auth:false
+        })
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const UnblockUser=async(req,res)=>{
+    const userId=req.params.id
+    try {
+        const user=await UserModel.findByIdAndUpdate({_id:userId},{
+            auth:true
+        })
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
