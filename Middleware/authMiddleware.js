@@ -13,10 +13,10 @@ const authMiddleWare =async (req,res,next)=>{
             const decoded =jwt.verify(token,secret)
             console.log(decoded)
             req.body._id=decoded?.id
-        }
+          }
         next()
     } catch (error) {
-          console.log(error)
+          console.log(error);
     }
 }
 

@@ -11,9 +11,10 @@ import ChatRoute from "./Routes/ChatRoute.js"
 import MessageRoute from "./Routes/MessageRoute.js"
 import RoomRoute from "./Routes/RoomRoute.js"
 import AdminRoute from "./Routes/AdminRoute.js"
+import TheaterAuthRoute from "./Routes/TheatreAuthRoute.js"
+import MovieRoute from "./Routes/MoviesRoute.js"
 const app=express();
  //serve images to public
- 
 
 app.use(express.static("public"))
 app.use("images",express.static("images"))
@@ -41,3 +42,5 @@ app.use('/chat',ChatRoute)
 app.use('/message', MessageRoute)
 app.use('/room', RoomRoute)
 app.use('/admin',AdminRoute)
+app.use("/theaterauth",TheaterAuthRoute)
+app.use("/movie",MovieRoute)
